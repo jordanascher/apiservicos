@@ -7,6 +7,14 @@ function listar() {
 
 function inserir(usuario) {
     if (usuario && usuario.nome && usuario.email && usuario.senha && usuario.confirmeSenha){
+        listaUsuarios.forEach(function(item){
+            if (usuario.email === item.email ) {
+                throw ({
+                    numero: 400,
+                    msg: "Erro: Já existe usuário com este email."
+                });  
+            }
+        })
         if (usuario.senha !== usuario.confirmeSenha){
             throw ({
                 numero: 400,

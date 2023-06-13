@@ -1,5 +1,7 @@
+//chama arquivo usuario cadastro
 const usuarioCadastro = require('../data/usuariosCadastro')
 
+// retorna o array que os usuários estão cadastrados e exibe em formato json
 function listar(req, res) {
     const listaUsuarios = usuarioCadastro.listar();
     res.json(listaUsuarios);

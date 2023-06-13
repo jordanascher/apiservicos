@@ -17,17 +17,28 @@ function inserir(servico) {
     servico.id = idAutoIncrement++;
     servico.status = true
     listaServicos.push(servico);
+    return servico
 }
 
 function cancelar(idServico) {
+    let cancelou = false
+
     listaServicos.forEach(function(servico) {
         if (servico.id == idServico) {
             servico.status = false
-            return {
-                'message' : 'Serviço cancelado com sucesso!'
-            }
+            cancelou = true
         }
-    })  
+    })
+    
+    if (cancelou) {
+        return {
+            'message' : 'Serviço cancelado com sucesso!'
+        }
+    } else {
+        return {
+            'message' : 'Serviço não encontrado!'
+        }
+    }
 }
 
 module.exports = { 
