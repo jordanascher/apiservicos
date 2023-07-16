@@ -1,0 +1,37 @@
+CREATE TABLE servico{
+    id_servico SERIAL NOT NULL PRIMARY KEY,
+    listaServico VARCHAR(60) NOT NULL,
+    valor_servico decimal(15,2),
+    FOREIGN KEY(id_usuario) references usuario (id_usuario)
+};
+
+CREATE TABLE usuario{
+    id_usuario SERIAL NOT NULL PRIMARY KEY,
+    nome_usuario VARCHAR(60) NOT NULL, 
+    email VARCHAR(70) NOT NULL,
+    senha VARCHAR(10) NOT NULL,
+    confirmeSenha VARCHAR(10) NOT NULL
+};
+
+CREATE TABLE cliente{
+    id_uliente SERIAL NOT NULL PRIMARY KEY,
+    nome_cliente VARCHAR(60) NOT NULL,
+    email_cliente VARCHAR(70) NOT NULL,
+    telefone VARCHAR(15) NOT NULL
+};
+
+CREATE TABLE profissional{
+    id_profissional SERIAL NOT NULL PRIMARY KEY, 
+    nome_profissional VARCHAR(60) NOT NULL
+}
+
+CREATE TABLE agenda{
+    id_agenda SERIAL NOT NULL PRIMARY KEY,
+    data_agenda  date NOT NULL,
+    hora_agenda time NOT NULL,
+    FOREIGN KEY(id_profissional) references profissional (id_profissional),
+    FOREIGN KEY(id_cliente) references cliente (id_cliente),
+    FOREIGN KEY(id_servico) references servico (id_servico)
+
+
+}
