@@ -7,12 +7,6 @@ async function listar(req, res) {
     res.status(200).json(listaUsuarios);
 }
 
-// retorna o array que os usuários estão cadastrados e exibe em formato json
-async function listarProfissionais(req, res) {
-    const listaUsuarios = await usuarioCadastro.listarProfissionais();
-    res.status(200).json(listaUsuarios);
-}
-
 async function cadastrar(req, res) {
     let usuario = req.body
 
@@ -44,19 +38,9 @@ async function deletar(req, res) {
     })
 }
 
-function autentica(req, res) {
-    usuarioCadastro.autentica(req.body.email, req.body.senha).then((usuarioLogado) => {
-        res.status(200).json(usuarioLogado)
-    }).catch((e) => {
-        res.status(400).json(e.msg)
-    })
-}
-
 module.exports = {
     listar,
-    listarProfissionais,
     cadastrar,
-    autentica,
     atualizar,
     deletar
 }

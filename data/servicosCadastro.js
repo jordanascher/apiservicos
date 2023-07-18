@@ -1,48 +1,65 @@
-let listaServicos = [];
-let idAutoIncrement = 1;
+const servicoDB = require('./../persistencia/servicosPersistencia')
 
-function listar(idUsuario) {
-    let servicosUsuario = []
-
-    listaServicos.forEach(function(servico) {
-        if (servico.idUsuario == idUsuario && servico.status) {
-            servicosUsuario.push(servico)
-        }
-    })
-
-    return servicosUsuario;
+async function listar() {
+    const listaServicos = await servicoDB.listar();
+    return listaServicos;
 }
 
-function inserir(servico) {
-    servico.id = idAutoIncrement++;
-    servico.status = true
-    listaServicos.push(servico);
-    return servico
-}
+async function inserir(servico) {
+     if (valida(servico)){
+        let response = await servicoDB.inserir(servico)
 
-function cancelar(idServico) {
-    let cancelou = false
+        if (response.error) {
+            throw ({
+                numero: 400,
+                msg: response.message
+            })
+        }
 
-    listaServicos.forEach(function(servico) {
-        if (servico.id == idServico) {
-            servico.status = false
-            cancelou = true
-        }
-    })
-    
-    if (cancelou) {
-        return {
-            'message' : 'Serviço cancelado com sucesso!'
-        }
+        return response
     } else {
-        return {
-            'message' : 'Serviço não encontrado!'
-        }
+        throw ({
+            numero: 400,
+            msg: "Erro: Os parametros do serviço estao invalidos"
+        });
     }
+}
+
+async function alterar(id, servico) {
+    if (valida(servico)){
+        let response = await servicoDB.alterar(id, servico)
+
+        if (response.error) {
+            throw ({
+                numero: 400,
+                msg: response.message
+            })
+        }
+
+        return response
+    } else {
+        throw ({
+            numero: 400,
+            msg: "Erro: Os parametros do usuario estao invalidos"
+        });
+    }
+}
+
+function valida(servico) {
+    if (servico.nome_servico && servico.lista_servico && servico.valor_servico){
+        return true
+    }
+
+    return false
+}
+
+function deletar(idServico) {
+
 }
 
 module.exports = { 
     listar,
     inserir,
-    cancelar
+    alterar,
+    deletar
 }

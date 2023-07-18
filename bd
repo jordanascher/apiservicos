@@ -1,37 +1,31 @@
-CREATE TABLE servico{
-    id_servico SERIAL NOT NULL PRIMARY KEY,
-    listaServico VARCHAR(60) NOT NULL,
-    valor_servico decimal(15,2),
-    FOREIGN KEY(id_usuario) references usuario (id_usuario)
-};
+CREATE TYPE perfil_usuario AS ENUM ('cliente', 'profissional', 'admin');
 
-CREATE TABLE usuario{
+CREATE TABLE usuarios (
     id_usuario SERIAL NOT NULL PRIMARY KEY,
     nome_usuario VARCHAR(60) NOT NULL, 
     email VARCHAR(70) NOT NULL,
     senha VARCHAR(10) NOT NULL,
-    confirmeSenha VARCHAR(10) NOT NULL
-};
+    perfil perfil_usuario NOT NULL,
+	telefone varchar(50),
+	endereco varchar(100),
+	numero varchar(10),
+	cep varchar(20)
+);
 
-CREATE TABLE cliente{
-    id_uliente SERIAL NOT NULL PRIMARY KEY,
-    nome_cliente VARCHAR(60) NOT NULL,
-    email_cliente VARCHAR(70) NOT NULL,
-    telefone VARCHAR(15) NOT NULL
-};
+CREATE TABLE servicos (
+    id_servico SERIAL NOT NULL PRIMARY KEY,
+    lista_servico VARCHAR(60) NOT NULL,
+    valor_servico decimal(15,2) NOT NULL
+);
 
-CREATE TABLE profissional{
-    id_profissional SERIAL NOT NULL PRIMARY KEY, 
-    nome_profissional VARCHAR(60) NOT NULL
-}
-
-CREATE TABLE agenda{
+CREATE TABLE agenda(
     id_agenda SERIAL NOT NULL PRIMARY KEY,
     data_agenda  date NOT NULL,
     hora_agenda time NOT NULL,
-    FOREIGN KEY(id_profissional) references profissional (id_profissional),
-    FOREIGN KEY(id_cliente) references cliente (id_cliente),
-    FOREIGN KEY(id_servico) references servico (id_servico)
-
-
-}
+    id_cliente SERIAL NOT NULL,
+    id_profissional SERIAL NOT NULL, 
+    id_servico SERIAL NOT NULL,
+    FOREIGN KEY(id_profissional) references usuario (id_usuario),
+    FOREIGN KEY(id_cliente) references usuario (id_cliente),
+    FOREIGN KEY(id_servico) references servicos (id_servico)
+)

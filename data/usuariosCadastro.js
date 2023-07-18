@@ -1,30 +1,38 @@
-let listaUsuarios = [];
-let idAutoIncrement = 1;
 
-function listar() {
-    return listaUsuarios;
+const usuarioDB = require('./../persistencia/usuarioPersistencia')
+
+async function listar() {
+    listaUsuarios = await usuarioDB.listar() 
+    return listaUsuarios
 }
 
-function inserir(usuario) {
-    if (usuario && usuario.nome && usuario.email && usuario.senha && usuario.confirmeSenha){
-        listaUsuarios.forEach(function(item){
-            if (usuario.email === item.email ) {
-                throw ({
-                    numero: 400,
-                    msg: "Erro: Já existe usuário com este email."
-                });  
-            }
-        })
-        if (usuario.senha !== usuario.confirmeSenha){
+async function listarProfissionais() {
+    listaUsuarios = await usuarioDB.buscar({
+        'campo': 'perfil',
+        'valor': 'profissional'
+    }) 
+    return listaUsuarios
+}
+
+async function inserir(usuario) {
+    if (valida(usuario)){
+        if (!validaSenha){
             throw ({
                 numero: 400,
                 msg: "Erro: A senha confirmada deve ser igual a senha digitada."
             });  
         }
-        
-        usuario.id = idAutoIncrement++;
-        listaUsuarios.push(usuario);
-        return usuario;
+
+        let response = await usuarioDB.inserir(usuario)
+
+        if (response.error) {
+            throw ({
+                numero: 400,
+                msg: response.message
+            })
+        }
+
+        return response
     } else {
         throw ({
             numero: 400,
@@ -33,34 +41,72 @@ function inserir(usuario) {
     }
 }
 
-function autentica(email, senha){
-    let usuarioAutenticado = null
+async function alterar(id, usuario) {
+    if (valida(usuario)){
+        let response = await usuarioDB.alterar(id, usuario)
 
-    listaUsuarios.forEach(function(usuario) {
-        if (usuario.email == email) {
-            if (usuario.senha == senha) {
-               usuarioAutenticado = usuario 
-            } else {
-                throw ({
-                    numero: 400,
-                    msg:"Usuário/senha incorretos"
-                });   
-            }
-        } 
-    })
+        if (response.error) {
+            throw ({
+                numero: 400,
+                msg: response.message
+            })
+        }
 
-    if (usuarioAutenticado) {
-        return usuarioAutenticado
+        return response
     } else {
         throw ({
             numero: 400,
-            msg: 'Nenhum usuário cadastrado para este email'
+            msg: "Erro: Os parametros do usuario estao invalidos"
         });
     }
 }
 
+function valida(usuario) {
+    if (usuario && usuario.nome && usuario.email && usuario.senha && usuario.confirmeSenha){
+        return true
+    }
+
+    return false
+}
+
+function validaSenha(usuario) {
+    if (usuario.senha !== usuario.confirmeSenha) {
+        return false
+    }
+    return true
+}
+
+async function deletar(id) {
+    let response = await usuarioDB.deletar(id)
+
+    if (response.error) {
+        throw ({
+            numero: 400,
+            msg: response.message
+        })
+    }
+
+    return response
+}
+
+async function autentica(email, senha){
+    let response = await usuarioDB.login(email, senha)
+
+    if (response.error) {
+        throw ({
+            numero: 400,
+            msg: response.message
+        })
+    }
+
+    return response
+}
+
 module.exports = { 
     listar,
+    listarProfissionais,
     inserir,
-    autentica
+    autentica,
+    alterar,
+    deletar
 }
