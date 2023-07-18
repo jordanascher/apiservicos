@@ -46,9 +46,10 @@ async function deletar(req, res) {
 
 function autentica(req, res) {
     usuarioCadastro.autentica(req.body.email, req.body.senha).then((usuarioLogado) => {
-        res.status(200).json(usuarioLogado)
-    }).catch((e) => {
-        res.status(400).json(e.msg)
+        if (usuarioLogado) {
+            res.status(200).json(usuarioLogado)
+        }
+        res.status(400).json('Usuário/senha incorretos')
     })
 }
 

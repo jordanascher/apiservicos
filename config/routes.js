@@ -13,6 +13,8 @@ router.delete('/usuarios/:id', usuariosController.deletar);
 
 router.get('/servicos', servicosController.listar);
 router.post('/servicos/cadastrar', servicosController.cadastrar);
+router.put('/servicos/atualizar/:id', servicosController.atualizar);
+router.delete('/servicos/:id', servicosController.deletar);
 
 router.get('/profissionais', usuariosController.listarProfissionais);
 

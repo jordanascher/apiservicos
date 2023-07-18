@@ -90,21 +90,14 @@ async function deletar(id){
 }
 
 async function login(email, senha){
-    try {
-        const sql = 'SELECT * FROM usuarios WHERE email=$1 AND senha=MD5($2)'
-        const values = [email, senha];
-        const client = new Client(conexao);
-        await client.connect();
-        const res = await client.query(sql, values);
-        let usuarioLogado = res.rows[0];
-        await client.end();
-        return usuarioLogado;
-    } catch (e) {
-        return {
-            'error': true,
-            'message': e.message
-        }
-    }
+    const sql = 'SELECT * FROM usuarios WHERE email=$1 AND senha=MD5($2)'
+    const values = [email, senha];
+    const client = new Client(conexao);
+    await client.connect();
+    const res = await client.query(sql, values);
+    let usuarioLogado = res.rows[0];
+    await client.end();
+    return usuarioLogado;
 }
 
 module.exports = {

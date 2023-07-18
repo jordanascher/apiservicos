@@ -91,14 +91,6 @@ async function deletar(id) {
 
 async function autentica(email, senha){
     let response = await usuarioDB.login(email, senha)
-
-    if (response.error) {
-        throw ({
-            numero: 400,
-            msg: response.message
-        })
-    }
-
     return response
 }
 

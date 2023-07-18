@@ -3,8 +3,8 @@ CREATE TYPE perfil_usuario AS ENUM ('cliente', 'profissional', 'admin');
 CREATE TABLE usuarios (
     id_usuario SERIAL NOT NULL PRIMARY KEY,
     nome_usuario VARCHAR(60) NOT NULL, 
-    email VARCHAR(70) NOT NULL,
-    senha VARCHAR(10) NOT NULL,
+    email VARCHAR(70) UNIQUE NOT NULL,
+    senha VARCHAR(200) NOT NULL,
     perfil perfil_usuario NOT NULL,
 	telefone varchar(50),
 	endereco varchar(100),
@@ -14,7 +14,8 @@ CREATE TABLE usuarios (
 
 CREATE TABLE servicos (
     id_servico SERIAL NOT NULL PRIMARY KEY,
-    lista_servico VARCHAR(60) NOT NULL,
+	nome_servico varchar(100) NOT NULL,
+    lista_servico TEXT NOT NULL,
     valor_servico decimal(15,2) NOT NULL
 );
 
@@ -25,7 +26,10 @@ CREATE TABLE agenda(
     id_cliente SERIAL NOT NULL,
     id_profissional SERIAL NOT NULL, 
     id_servico SERIAL NOT NULL,
-    FOREIGN KEY(id_profissional) references usuario (id_usuario),
-    FOREIGN KEY(id_cliente) references usuario (id_cliente),
+	status BOOLEAN NOT NULL DEFAULT 't', 
+    FOREIGN KEY(id_profissional) references usuarios (id_usuario),
+    FOREIGN KEY(id_cliente) references usuarios (id_usuario),
     FOREIGN KEY(id_servico) references servicos (id_servico)
-)
+);
+
+select * from agenda;
